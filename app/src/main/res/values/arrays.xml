@@ -1,0 +1,7 @@
+<resources>
+    <string-array name="sort_options">
+        <item>Sort by First Name</item>
+        <item>Sort by Last Name</item>
+        <item>Sort by Address</item>
+    </string-array>
+</resources>
