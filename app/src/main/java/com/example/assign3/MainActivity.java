@@ -1,6 +1,9 @@
 package com.example.assign3;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -9,6 +12,7 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 public class MainActivity extends AppCompatActivity {
+    static final int DETAIL_ACTIVITY_REQUEST_CODE = 2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -19,6 +23,21 @@ public class MainActivity extends AppCompatActivity {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
+        });
+
+        configureDetailButton();
+    }
+
+    public void configureDetailButton() {
+        Button detailButton = (Button) findViewById(R.id.goToDetail);
+        detailButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent passedIntent = new Intent(MainActivity.this, DetailActivity.class);
+                passedIntent.putExtra("keyForName", "nameToPassOn");
+                passedIntent.putExtra("keyForAddress", "AddressToPassOn");
+                startActivity(passedIntent);
+            }
         });
     }
 }
