@@ -1,4 +1,4 @@
-package com.example.assign3;
+package com.example.assign3.DetailActivityRes;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -8,6 +8,8 @@ import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.TextView;
+
+import com.example.assign3.R;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -79,6 +81,7 @@ public class DropdownAdapter extends ArrayAdapter<StateVO> {
 
                     // Code for updating db/array with changes
                     // ...
+                    System.out.println("update to status occured!");
                 }
             }
         });

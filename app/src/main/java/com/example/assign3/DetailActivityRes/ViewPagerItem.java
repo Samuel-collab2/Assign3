@@ -1,4 +1,4 @@
-package com.example.assign3;
+package com.example.assign3.DetailActivityRes;
 
 public class ViewPagerItem {
     int imageId;
