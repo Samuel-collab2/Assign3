@@ -55,9 +55,57 @@ public class LoginActivity extends AppCompatActivity {
         signUpButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-//                TODO: ADD SIGN UP FUNCTIONALITY
+                String username = usernameEditText.getText().toString();
+                String password = passwordEditText.getText().toString();
+
+                if (TextUtils.isEmpty(username) || TextUtils.isEmpty(password)) {
+                    Toast.makeText(LoginActivity.this, "Please enter username and password", Toast.LENGTH_SHORT).show();
+                } else {
+                    signUpUser(username, password);
+                }
             }
         });
+    }
+
+    private void signUpUser(String username, String password){
+        new Thread(() -> {
+            try {
+                URL url = new URL(SERVER_HOSTNAME + "/signup");
+                HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+                conn.setRequestMethod("POST");
+                conn.setRequestProperty("Content-Type", "application/json");
+                conn.setDoOutput(true);
+
+                // Create JSON object with credentials
+                JSONObject jsonObject = new JSONObject();
+                jsonObject.put("username", username);
+                jsonObject.put("password", password);
+
+                // Send JSON data
+                OutputStream os = conn.getOutputStream();
+                os.write(jsonObject.toString().getBytes());
+                os.flush();
+                os.close();
+
+                // Check the response code
+                int responseCode = conn.getResponseCode();
+                if (responseCode == HttpsURLConnection.HTTP_CREATED) {
+                    runOnUiThread(() -> {
+                        Toast.makeText(LoginActivity.this, "Sign up successful", Toast.LENGTH_SHORT).show();
+                        Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                        startActivity(intent);
+                        finish();
+                    });
+                } else {
+                    runOnUiThread(() -> Toast.makeText(LoginActivity.this, "Username already exists", Toast.LENGTH_SHORT).show());
+                }
+                conn.disconnect();
+            } catch (Exception e) {
+                e.printStackTrace();
+                runOnUiThread(() -> Toast.makeText(LoginActivity.this, "Error connecting to server", Toast.LENGTH_SHORT).show());
+            }
+        }
+        ).start();
     }
 
     private void authenticateUser(String username, String password) {
