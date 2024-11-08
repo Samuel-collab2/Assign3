@@ -4,7 +4,9 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -18,7 +20,7 @@ import java.util.ArrayList;
 public class ViewPagerAdapter extends RecyclerView.Adapter<ViewPagerAdapter.ViewHolder> {
 
     ArrayList<ViewPagerItem> viewPagerItemArrayList;
-    final String[] select_qualification = {"status", "red", "blue", "green"};
+    final String[] select_qualification = {"status", "completed", "refused", "partial"};
     Context context;
 
     public ViewPagerAdapter(ArrayList<ViewPagerItem> viewPagerItemArrayList, Context context) {
@@ -44,6 +46,10 @@ public class ViewPagerAdapter extends RecyclerView.Adapter<ViewPagerAdapter.View
         holder.nameView.setText("" + viewPagerItem.firstName + " " + viewPagerItem.lastName);
         holder.addressView.setText(viewPagerItem.address);
 
+        holder.ageView.setText(String.valueOf(viewPagerItem.age));
+        holder.emailView.setText(viewPagerItem.email);
+        holder.phoneView.setText(viewPagerItem.phone);
+
         ArrayList<StateVO> listVOs = new ArrayList<>();
 
         StateVO stateVO1 = new StateVO();
@@ -51,16 +57,32 @@ public class ViewPagerAdapter extends RecyclerView.Adapter<ViewPagerAdapter.View
         stateVO1.setSelected(false);
         listVOs.add(stateVO1);
 
-        for (int i = 0; i < select_qualification.length - 1; i++) {
+        for (int i = 1; i < select_qualification.length; i++) {
             StateVO stateVO = new StateVO();
             stateVO.setTitle(select_qualification[i]);
-            stateVO.setSelected(viewPagerItem.status[i]);
-
+            stateVO.setSelected(viewPagerItem.status[i - 1]);
             listVOs.add(stateVO);
         }
         DropdownAdapter myAdapter = new DropdownAdapter(context, 0,
-                listVOs);
+                listVOs, holder.spinnerView);
         holder.spinnerView.setAdapter(myAdapter);
+
+
+        holder.spinnerView.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+//                holder.spinnerView.performClick();
+//                holder.spinnerView.performClick();
+                holder.spinnerView.setPressed(false);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+//                holder.spinnerView.setVisibility(View.GONE);
+//                holder.spinnerView.setVisibility(View.VISIBLE);
+            }
+
+        });
     }
 
     @Override
@@ -74,6 +96,11 @@ public class ViewPagerAdapter extends RecyclerView.Adapter<ViewPagerAdapter.View
         TextView nameView;
         TextView addressView;
         Spinner spinnerView;
+        // CustomSpinner spinnerView;
+
+        TextView ageView;
+        TextView emailView;
+        TextView phoneView;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -82,6 +109,10 @@ public class ViewPagerAdapter extends RecyclerView.Adapter<ViewPagerAdapter.View
             nameView = itemView.findViewById(R.id.nameText);
             addressView = itemView.findViewById(R.id.addressText);
             spinnerView = itemView.findViewById(R.id.spinner);
+
+            ageView = itemView.findViewById(R.id.ageText);
+            emailView = itemView.findViewById(R.id.emailText);
+            phoneView = itemView.findViewById(R.id.phoneText);
         }
     }
 

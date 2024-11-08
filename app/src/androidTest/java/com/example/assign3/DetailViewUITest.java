@@ -1,48 +1,58 @@
 package com.example.assign3;
 
+import static android.os.SystemClock.sleep;
+
 import org.junit.Rule;
 import org.junit.Test;
-
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.Locale;
 
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
 
 
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
+import static androidx.test.espresso.action.ViewActions.swipeRight;
+import static androidx.test.espresso.action.ViewActions.swipeLeft;
 import static androidx.test.espresso.action.ViewActions.closeSoftKeyboard;
 import static androidx.test.espresso.action.ViewActions.replaceText;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
+//import static androidx.test.espresso.matcher.ViewMatchers.withId;
+//import static androidx.test.espresso.matcher.ViewMatchers.withText;
+import static androidx.test.espresso.matcher.ViewMatchers.*;
+import static org.hamcrest.Matchers.instanceOf;
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.core.StringContains.containsString;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
-import static androidx.test.espresso.matcher.ViewMatchers.withText;
+
+import static org.hamcrest.core.AllOf.allOf;
 
 public class DetailViewUITest {
     @Rule
-    public ActivityScenarioRule<MainActivity> mActivityRule =
-            new ActivityScenarioRule<>(MainActivity.class);
+    public ActivityScenarioRule<DetailActivity> mActivityRule =
+            new ActivityScenarioRule<>(DetailActivity.class);
 
-    @Test  /* Find Photos Test*/
-    public void timeBasedSearch() throws Exception {
+    @Test  /* change status check*/
+    public void statusChangeCheck() throws Exception {
 
+        onView(withId(R.id.viewPager)).perform(swipeLeft());
 
-        //Find and Click the Search Button
-        onView(withId(R.id.btnSearch)).perform(click());
+        sleep(500);
 
-        //Find From and To fields in the Search layout and fill these with the above test data
-        String from = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault()).format(startTimestamp);
-        String to = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault()).format(endTimestamp);
-        onView(withId(R.id.etFromDateTime)).perform(replaceText(from), closeSoftKeyboard());
-        onView(withId(R.id.etToDateTime)).perform(replaceText(to), closeSoftKeyboard());
-        onView(withId(R.id.etKeywords)).perform(replaceText(""), closeSoftKeyboard());
+        onView(withId(R.id.viewPager)).perform(swipeRight());
 
-        //Find and Click the GO button on the Search View
-        onView(withId(R.id.go)).perform(click());
+        sleep(500);
 
-        //Verify that the timestamp of the found Image matches the Expected value
-        onView(withId(R.id.tvTimestamp)).check(matches(withText("20210227_132142")));
+        onView(allOf(withId(R.id.spinner), isDisplayed())).perform(click());
+
+        sleep(500);
+        onView(withText("refused")).perform(click());
+        sleep(500);
+
+        boolean checkedResult = true;
+        // Optionally, add assertions if needed, for example:
+//        onView(withText("completed")).;
+
+        onView(withText("completed")).
+                check(matches(isChecked())); // Check if checkbox is checked
+
     }
 }

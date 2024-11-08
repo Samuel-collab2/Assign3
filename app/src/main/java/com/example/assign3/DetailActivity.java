@@ -14,10 +14,20 @@ import com.example.assign3.DetailActivityRes.ViewPagerItem;
 
 import java.util.ArrayList;
 
+import retrofit2.Call;
+import retrofit2.Retrofit;
+import retrofit2.http.GET;
+import retrofit2.http.Path;
+
 public class DetailActivity extends AppCompatActivity {
 
     ViewPager2 viewPager2;
     ArrayList<ViewPagerItem> viewPagerItemArrayList;
+
+    interface RequestUser {
+        @GET("http://127.0.0.1:5000/clients/{uid}")
+        Call<ViewPagerItem> getClient(@Path("uid") String uid):
+    }
 
 
     @Override
@@ -31,9 +41,14 @@ public class DetailActivity extends AppCompatActivity {
             return insets;
         });
 
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl("http://127.0.0.1:5000")
+                .addConverterFactory(GsonConverterFactory)
+
         // Can pass info from layout to layout via intents:
         String name = getIntent().getStringExtra("keyForName");
         String address = getIntent().getStringExtra("keyForAddress");
+
 
         viewPager2 = findViewById(R.id.viewPager);
         int[] images = {R.drawable.pika, R.drawable.charma};
@@ -41,8 +56,12 @@ public class DetailActivity extends AppCompatActivity {
         String[] lastNames = {"Adam", "Lee"};
         String[] addresses = {"234 pineapple ave", "3334 north road"};
         Boolean[] statusRachel = {true, false, false};
-        Boolean[] statusAdam = {true, false, true};
+        Boolean[] statusAdam = {false, false, true};
         Boolean[][] status = {statusRachel, statusAdam};
+
+        Integer[] age = {19, 23};
+        String[] email = {"first@email.com", "second@email.com"};
+        String[] phone = {"555-123", "555-888"};
 
 
         viewPagerItemArrayList = new ArrayList<>();
@@ -51,7 +70,7 @@ public class DetailActivity extends AppCompatActivity {
         for (int i =0; i < images.length; i++) {
             ViewPagerItem viewPagerItem =
                     new ViewPagerItem(images[i], firstNames[i], lastNames[i], addresses[i],
-                            status[i]);
+                            status[i], age[i], email[i], phone[i]);
             viewPagerItemArrayList.add(viewPagerItem);
         }
 
