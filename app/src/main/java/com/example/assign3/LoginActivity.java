@@ -92,6 +92,12 @@ public class LoginActivity extends AppCompatActivity {
                 if (responseCode == HttpsURLConnection.HTTP_CREATED) {
                     runOnUiThread(() -> {
                         Toast.makeText(LoginActivity.this, "Sign up successful", Toast.LENGTH_SHORT).show();
+
+                        SharedPreferences sharedPreferences = getSharedPreferences("LoginPrefs", MODE_PRIVATE);
+                        SharedPreferences.Editor editor = sharedPreferences.edit();
+                        editor.putBoolean("isLoggedIn", true);
+                        editor.apply();
+
                         Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                         startActivity(intent);
                         finish();
@@ -137,6 +143,7 @@ public class LoginActivity extends AppCompatActivity {
                     // Save token and navigate to MainActivity
                     SharedPreferences sharedPreferences = getSharedPreferences("LoginPrefs", MODE_PRIVATE);
                     SharedPreferences.Editor editor = sharedPreferences.edit();
+                    editor.putBoolean("isLoggedIn", true);
                     editor.putString("token", token);
                     editor.apply();
 
