@@ -92,15 +92,6 @@ public class LoginActivity extends AppCompatActivity {
                 if (responseCode == HttpsURLConnection.HTTP_CREATED) {
                     runOnUiThread(() -> {
                         Toast.makeText(LoginActivity.this, "Sign up successful", Toast.LENGTH_SHORT).show();
-
-                        SharedPreferences sharedPreferences = getSharedPreferences("LoginPrefs", MODE_PRIVATE);
-                        SharedPreferences.Editor editor = sharedPreferences.edit();
-                        editor.putBoolean("isLoggedIn", true);
-                        editor.apply();
-
-                        Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-                        startActivity(intent);
-                        finish();
                     });
                 } else {
                     runOnUiThread(() -> Toast.makeText(LoginActivity.this, "Username already exists", Toast.LENGTH_SHORT).show());
