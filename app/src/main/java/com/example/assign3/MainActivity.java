@@ -1,5 +1,7 @@
 package com.example.assign3;
 
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
@@ -29,6 +31,20 @@ public class MainActivity extends AppCompatActivity {
 
         sortSpinner = findViewById(R.id.sortSpinner);
         searchView = findViewById(R.id.searchView);
+
+
+
+        // Check if the user is logged in
+        SharedPreferences sharedPreferences = getSharedPreferences("LoginPrefs", MODE_PRIVATE);
+        boolean isLoggedIn = sharedPreferences.getBoolean("isLoggedIn", false);
+
+        if (!isLoggedIn) {
+            // Redirect to LoginActivity if not logged in
+            Intent intent = new Intent(this, LoginActivity.class);
+            startActivity(intent);
+            finish();
+            return;
+        }
 
         // Set up search filtering
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
