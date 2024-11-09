@@ -72,4 +72,11 @@ public class ClientAdapter extends RecyclerView.Adapter<ClientAdapter.ClientView
             checkbox3 = itemView.findViewById(R.id.statusCheckbox3);
         }
     }
+
+    // Add this method to the existing ClientAdapter class
+    public void updateList(List<Client> newList) {
+        clientList.clear();
+        clientList.addAll(newList);
+        notifyDataSetChanged();
+    }
 }

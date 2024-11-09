@@ -10,16 +10,10 @@ import android.widget.Spinner;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
-    private RecyclerView recyclerView;
-    private ClientAdapter adapter;
-    private List<Client> clientList;
+    private ClientManager clientManager;
     private Spinner sortSpinner;
     private SearchView searchView;
 
@@ -28,20 +22,13 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        recyclerView = findViewById(R.id.clientRecyclerView);
+        RecyclerView recyclerView = findViewById(R.id.clientRecyclerView);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+
+        clientManager = new ClientManager(this, recyclerView);
+
         sortSpinner = findViewById(R.id.sortSpinner);
         searchView = findViewById(R.id.searchView);
-
-        // Initialize client list
-        clientList = new ArrayList<>();
-        clientList.add(new Client(R.drawable.person_icon_placeholder, "Anadi", "Frontend", "Newton, BC"));
-        clientList.add(new Client(R.drawable.person_icon_placeholder, "Simar", "Login", "Vancouver, BC"));
-        clientList.add(new Client(R.drawable.person_icon_placeholder, "Dhruv", "Backend", "Unknown, Canada"));
-        // Add more clients as needed...
-
-        adapter = new ClientAdapter(clientList, this);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        recyclerView.setAdapter(adapter);
 
         // Set up search filtering
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
@@ -52,7 +39,7 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public boolean onQueryTextChange(String newText) {
-                filterClients(newText);
+                clientManager.filterClients(newText);
                 return true;
             }
         });
@@ -66,44 +53,12 @@ public class MainActivity extends AppCompatActivity {
         sortSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                sortClients(position);
+                clientManager.sortClients(position);
             }
 
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
             }
         });
-    }
-
-    private void filterClients(String text) {
-        List<Client> filteredList = new ArrayList<>();
-        for (Client client : clientList) {
-            if (client.getFirstName().toLowerCase().contains(text.toLowerCase()) ||
-                    client.getLastName().toLowerCase().contains(text.toLowerCase()) ||
-                    client.getAddress().toLowerCase().contains(text.toLowerCase())) {
-                filteredList.add(client);
-            }
-        }
-        adapter = new ClientAdapter(filteredList, this);
-        recyclerView.setAdapter(adapter);
-    }
-
-    private void sortClients(int position) {
-        Comparator<Client> comparator;
-        switch (position) {
-            case 0: // Sort by first name
-                comparator = Comparator.comparing(Client::getFirstName);
-                break;
-            case 1: // Sort by last name
-                comparator = Comparator.comparing(Client::getLastName);
-                break;
-            case 2: // Sort by address
-                comparator = Comparator.comparing(Client::getAddress);
-                break;
-            default:
-                return;
-        }
-        Collections.sort(clientList, comparator);
-        adapter.notifyDataSetChanged();
     }
 }
