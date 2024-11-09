@@ -34,8 +34,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent passedIntent = new Intent(MainActivity.this, DetailActivity.class);
-                passedIntent.putExtra("keyForName", "nameToPassOn");
-                passedIntent.putExtra("keyForAddress", "AddressToPassOn");
+                passedIntent.putExtra("clientId", 3);
                 startActivity(passedIntent);
             }
         });
