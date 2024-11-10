@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.net.HttpURLConnection;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -47,6 +48,11 @@ public class MainActivity extends AppCompatActivity {
             finish();
             return;
         }
+
+        // Initialize and set up ClientAdapter with data and token
+        List<Client> clientList = clientManager.getClients(); // Assuming clientManager can provide client list
+        ClientAdapter clientAdapter = new ClientAdapter(clientList, this);
+        recyclerView.setAdapter(clientAdapter);
 
         // Set up search filtering
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
@@ -86,13 +92,4 @@ public class MainActivity extends AppCompatActivity {
             conn.addRequestProperty("Authorization", token);
         }
     }
-
-    // Example method to navigate to DetailActivity with a client ID
-    private void goToDetailActivity(int clientId) {
-        Intent passedIntent = new Intent(MainActivity.this, DetailActivity.class);
-        passedIntent.putExtra("clientId", clientId);
-        startActivity(passedIntent);
-
-    } //Testing code
-
 }

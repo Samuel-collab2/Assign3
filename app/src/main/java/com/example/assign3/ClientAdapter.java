@@ -1,6 +1,8 @@
 package com.example.assign3;
 
 import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -46,6 +48,19 @@ public class ClientAdapter extends RecyclerView.Adapter<ClientAdapter.ClientView
         holder.checkbox1.setText(client.getStatusOptions().get(0));
         holder.checkbox2.setText(client.getStatusOptions().get(1));
         holder.checkbox3.setText(client.getStatusOptions().get(2));
+
+        // Set OnClickListener to navigate to DetailActivity on item click
+        holder.itemView.setOnClickListener(v -> {
+            // Retrieve the auth token from SharedPreferences
+            SharedPreferences sharedPreferences = context.getSharedPreferences("LoginPrefs", Context.MODE_PRIVATE);
+            String authToken = sharedPreferences.getString("token", null);
+
+            // Start DetailActivity with clientId and authTok as extras
+            Intent intent = new Intent(context, DetailActivity.class);
+            intent.putExtra("clientId", client.getId()); // Assuming client.getId() returns the client ID
+            intent.putExtra("authTok", authToken);
+            context.startActivity(intent);
+        });
     }
 
     @Override
