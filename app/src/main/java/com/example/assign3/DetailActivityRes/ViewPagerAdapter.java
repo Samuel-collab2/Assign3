@@ -23,11 +23,13 @@ public class ViewPagerAdapter extends RecyclerView.Adapter<ViewPagerAdapter.View
     // First item in select_qualification won't be a check box, but the label text for the dropdown spinner
     final String[] select_qualification = {"status", "completed", "refused", "partial"};
     Context context;
+    String authTok;
 
 
-    public ViewPagerAdapter(ArrayList<ViewPagerItem> viewPagerItemArrayList, Context context) {
+    public ViewPagerAdapter(ArrayList<ViewPagerItem> viewPagerItemArrayList, Context context, String authTok) {
         this.viewPagerItemArrayList = viewPagerItemArrayList;
         this.context = context;
+        this.authTok = authTok;
     }
 
     @NonNull
@@ -68,7 +70,7 @@ public class ViewPagerAdapter extends RecyclerView.Adapter<ViewPagerAdapter.View
             listVOs.add(stateVO);
         }
         DropdownAdapter myAdapter = new DropdownAdapter(context, 0,
-                listVOs, holder.spinnerView);
+                listVOs, authTok);
         holder.spinnerView.setAdapter(myAdapter);
     }
 

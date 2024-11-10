@@ -6,7 +6,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
-import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.example.assign3.R;
@@ -23,20 +22,17 @@ public class DropdownAdapter extends ArrayAdapter<StateVO> {
     private ArrayList<StateVO> listState;
     private DropdownAdapter myAdapter;
     private boolean isFromView = false;
-    private int checkedIndex;
     private CheckBox checkedBox;
-    private Spinner mSpinner;
-    boolean selfUnchecked = false;
     private String domain = "http://10.0.2.2:5000";
-    String authTok = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImpvaG5fZG9lIiwiZXhwIjoxNzMxMjEwOTUwfQ.BoqdjZ4rHmsFturLGFCusP1J_DP5BBwHy14-tja6QNA";
+    String authTok = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImpvaG5fZG9lIiwiZXhwIjoxNzMxMzU4NjIyfQ.amdQH5UPSY9PXmFBdp36JaiyAfDiU0PH19axePevtlc";
     private int clientId = 1;
 
-    public DropdownAdapter(Context context, int resource, List<StateVO> objects, Spinner spinner) {
+    public DropdownAdapter(Context context, int resource, List<StateVO> objects, String authTok) {
         super(context, resource, objects);
         this.mContext = context;
         this.listState = (ArrayList<StateVO>) objects;
         this.myAdapter = this;
-        this.mSpinner = spinner;
+        this.authTok = authTok;
     }
 
     @Override
@@ -77,7 +73,6 @@ public class DropdownAdapter extends ArrayAdapter<StateVO> {
         if (listState.get(position).isSelected()) {
             holder.mCheckBox.setChecked(true);
             checkedBox = holder.mCheckBox;
-            checkedIndex = position - 1;
         } else {
             holder.mCheckBox.setChecked(false);
         }
@@ -106,14 +101,11 @@ public class DropdownAdapter extends ArrayAdapter<StateVO> {
                     System.out.println(listState.get(getPosition).getTitle());
                     String arg = String.format("{\"status\": \"%s\"}", listState.get(getPosition).getTitle());
                     updateClient(arg);
+                    System.out.println("update to status occurred!");
                 } else {
                     // Case where checked box is unchecked
                     listState.get(getPosition).setSelected(false);
                 }
-
-
-                // Optionally, update any underlying data (e.g., DB or array)
-                System.out.println("update to status occurred!");
             }
         });
 
@@ -156,19 +148,6 @@ public class DropdownAdapter extends ArrayAdapter<StateVO> {
                     // Get the response code to check if the request was successful
                     int responseCode = connection.getResponseCode();
                     System.out.println("Response Code: " + responseCode);
-
-//                    // Read the response if needed
-//                    BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-//                    String inputLine;
-//                    StringBuffer response = new StringBuffer();
-//
-//                    while ((inputLine = in.readLine()) != null) {
-//                        response.append(inputLine);
-//                    }
-//                    in.close();
-//
-//                    // Print the response (optional)
-//                    System.out.println("Response: " + response.toString());
 
                     // Close the connection
                     connection.disconnect();

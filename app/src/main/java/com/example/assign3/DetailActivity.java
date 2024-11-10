@@ -25,10 +25,8 @@ import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
-//import java.util.Base64;
 import java.util.Scanner;
 import java.util.concurrent.CompletableFuture;
-import java.util.HashMap;
 
 import android.util.Base64;
 
@@ -43,7 +41,7 @@ public class DetailActivity extends AppCompatActivity {
 
     String domain = "http://10.0.2.2:5000";
     String getURL = "http://10.0.2.2:5000/clients";
-    String authTok = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImpvaG5fZG9lIiwiZXhwIjoxNzMxMjY0OTI0fQ.kzY6zgejGgeb23QzrhejpmzJqk-kNgYazuUypp7Xke0";
+    String authTok = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImpvaG5fZG9lIiwiZXhwIjoxNzMxMzU4NjIyfQ.amdQH5UPSY9PXmFBdp36JaiyAfDiU0PH19axePevtlc";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,7 +75,7 @@ public class DetailActivity extends AppCompatActivity {
                     // Initialize the ViewPager adapter only once data is ready
                     if (viewPager2.getAdapter() == null) {
                         viewPagerItemArrayList = new ArrayList<>(viewPagerItems);
-                        ViewPagerAdapter viewPagerAdapter = new ViewPagerAdapter(viewPagerItemArrayList, DetailActivity.this);
+                        ViewPagerAdapter viewPagerAdapter = new ViewPagerAdapter(viewPagerItemArrayList, DetailActivity.this, authTok);
                         viewPager2.setAdapter(viewPagerAdapter);
                         viewPager2.setClipToPadding(false);
                         viewPager2.setClipChildren(false);

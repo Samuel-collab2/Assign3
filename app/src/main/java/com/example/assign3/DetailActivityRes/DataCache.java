@@ -2,7 +2,6 @@ package com.example.assign3.DetailActivityRes;
 
 import android.graphics.Bitmap;
 
-import java.util.BitSet;
 import java.util.HashMap;
 
 public class DataCache {
