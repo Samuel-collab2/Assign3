@@ -92,5 +92,5 @@ public class MainActivity extends AppCompatActivity {
         Intent passedIntent = new Intent(MainActivity.this, DetailActivity.class);
         passedIntent.putExtra("clientId", clientId);
         startActivity(passedIntent);
-    }
+    } //Testing code
 }
