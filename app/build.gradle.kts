@@ -39,6 +39,6 @@ dependencies {
     implementation(libs.activity)
     implementation(libs.constraintlayout)
     testImplementation(libs.junit)
-    androidTestImplementation(libs.ext.junit)
-    androidTestImplementation(libs.espresso.core)
+    androidTestImplementation(libs.ext.junit) // This should refer to the correct JUnit version
+    androidTestImplementation(libs.espresso.core) // Make sure this is the correct Espresso version
 }

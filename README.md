@@ -1,0 +1,2 @@
+Android studio:
+  - Emulator used: <>

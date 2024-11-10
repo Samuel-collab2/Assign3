@@ -41,7 +41,8 @@ public class DetailActivity extends AppCompatActivity {
 
     String domain = "http://10.0.2.2:5000";
     String getURL = "http://10.0.2.2:5000/clients";
-    String authTok = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImpvaG5fZG9lIiwiZXhwIjoxNzMxMzU4NjIyfQ.amdQH5UPSY9PXmFBdp36JaiyAfDiU0PH19axePevtlc";
+    String authTok;
+    String authTokDefault = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImpvaG5fZG9lIiwiZXhwIjoxNzMxMzU4NjIyfQ.amdQH5UPSY9PXmFBdp36JaiyAfDiU0PH19axePevtlc";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,6 +63,7 @@ public class DetailActivity extends AppCompatActivity {
 
         // Get client ID from display page; will be first client shown on detail activity
         int clientId = getIntent().getIntExtra("clientId", 2);
+        authTok = getIntent().getStringExtra("authTok");
 
         // Retrieve data asynchronously
         CompletableFuture<ArrayList<ViewPagerItem>> futureData = getClients(clientId);
