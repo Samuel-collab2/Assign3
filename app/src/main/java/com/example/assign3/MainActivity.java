@@ -13,11 +13,14 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.net.HttpURLConnection;
+
 public class MainActivity extends AppCompatActivity {
 
     private ClientManager clientManager;
     private Spinner sortSpinner;
     private SearchView searchView;
+    private String token; // Variable to store the token
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,14 +35,13 @@ public class MainActivity extends AppCompatActivity {
         sortSpinner = findViewById(R.id.sortSpinner);
         searchView = findViewById(R.id.searchView);
 
-
-
         // Check if the user is logged in
         SharedPreferences sharedPreferences = getSharedPreferences("LoginPrefs", MODE_PRIVATE);
         boolean isLoggedIn = sharedPreferences.getBoolean("isLoggedIn", false);
+        token = sharedPreferences.getString("token", null); // Retrieve the token
 
-        if (!isLoggedIn) {
-            // Redirect to LoginActivity if not logged in
+        if (!isLoggedIn || TextUtils.isEmpty(token)) {
+            // Redirect to LoginActivity if not logged in or token is missing
             Intent intent = new Intent(this, LoginActivity.class);
             startActivity(intent);
             finish();
@@ -76,5 +78,19 @@ public class MainActivity extends AppCompatActivity {
             public void onNothingSelected(AdapterView<?> parent) {
             }
         });
+    }
+
+    // Example method to add Authorization header (if needed for a network request)
+    private void addAuthorizationHeader(HttpURLConnection conn) {
+        if (!TextUtils.isEmpty(token)) {
+            conn.addRequestProperty("Authorization", token);
+        }
+    }
+
+    // Example method to navigate to DetailActivity with a client ID
+    private void goToDetailActivity(int clientId) {
+        Intent passedIntent = new Intent(MainActivity.this, DetailActivity.class);
+        passedIntent.putExtra("clientId", clientId);
+        startActivity(passedIntent);
     }
 }
