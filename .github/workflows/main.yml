@@ -23,13 +23,8 @@ jobs:
           java-version: '11'
 
       - name: Run Android Lint
-        # You may pin to the exact commit or the version.
-        # uses: yutailang0119/action-android-lint@bd0b5a7d2cc453d16080b90e2a975d4af4aa9588
         uses: yutailang0119/action-android-lint@v4.0.0
         with:
-          # The lint report file path. Support glob patterns, e.g., `build/reports/*.xml`
-          report-path: ''  # Add the file path here, e.g., 'build/reports/lint-results.xml'
-          # Indicates whether to follow symbolic links (optional, default is true)
-          follow-symbolic-links: true
-          # Ignore Lint Warnings (optional, default is false)
-          ignore-warnings: false
+          report-path: 'app/build/reports/lint-results.xml'  # Update this to the correct path in your project
+          follow-symbolic-links: true  # Optional
+          ignore-warnings: false       # Optional
