@@ -36,8 +36,19 @@ public class ClientManagerTest {
         Thread.sleep(500);
 
         // Verify that the sorted list displays clients in correct order
-        onView(withText("Anadi Frontend")).check(matches(isDisplayed()));
-        onView(withText("Simar Login")).check(matches(isDisplayed()));
-        onView(withText("Dhruv Backend")).check(matches(isDisplayed()));
+        // Testing the first client: John Doe, Frontend (status here used as role)
+        onView(withText("John Doe completed")).check(matches(isDisplayed()));
+
+// Testing the second client: Jane Smith, Refused (status here used as role)
+        onView(withText("Jane Smith refused")).check(matches(isDisplayed()));
+
+// Testing the third client: Emily Johnson, Partial (status here used as role)
+        onView(withText("Emily Johnson partial")).check(matches(isDisplayed()));
+
+// Testing the fourth client: Michael Brown, Completed (status here used as role)
+        onView(withText("Michael Brown completed")).check(matches(isDisplayed()));
+
+// Testing the fifth client: Sarah Davis, Refused (status here used as role)
+        onView(withText("Sarah Davis refused")).check(matches(isDisplayed()));
     }
 }
