@@ -1,3 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Assign3</string>
+
+    <!-- Spinner options -->
+    <string-array name="spinner_options">
+        <item>completed</item>
+        <item>refused</item>
+        <item>partial</item>
+    </string-array>
 </resources>

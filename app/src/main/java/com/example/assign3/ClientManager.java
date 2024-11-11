@@ -16,9 +16,9 @@ public class ClientManager {
     public ClientManager(Context context, RecyclerView recyclerView) {
         // Initialize the original client list
         clientListOriginal = new ArrayList<>();
-        clientListOriginal.add(new Client(R.drawable.person_icon_placeholder, "Anadi", "Frontend", "Newton, BC"));
-        clientListOriginal.add(new Client(R.drawable.person_icon_placeholder, "Simar", "Login", "Vancouver, BC"));
-        clientListOriginal.add(new Client(R.drawable.person_icon_placeholder, "Dhruv", "Backend", "Unknown, Canada"));
+        clientListOriginal.add(new Client(R.drawable.person_icon_placeholder, 1, "Anadi", "Frontend", "Newton, BC"));
+        clientListOriginal.add(new Client(R.drawable.person_icon_placeholder,2,  "Simar", "Login", "Vancouver, BC"));
+        clientListOriginal.add(new Client(R.drawable.person_icon_placeholder,3,  "Dhruv", "Backend", "Unknown, Canada"));
         // Add more clients as needed...
 
         // Copy the original list to the display list
@@ -70,5 +70,9 @@ public class ClientManager {
         }
         Collections.sort(clientList, comparator);
         adapter.notifyDataSetChanged();
+    }
+
+    public List<Client> getClients() {
+        return clientList;
     }
 }

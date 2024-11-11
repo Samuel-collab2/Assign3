@@ -32,6 +32,8 @@ android {
 }
 
 dependencies {
+    implementation(libs.viewpager2)
+    implementation(libs.material.v100)
     implementation(libs.appcompat)
     implementation(libs.material)
     implementation(libs.activity)

@@ -5,13 +5,15 @@ import java.util.List;
 
 public class Client {
     private int photo;
+    private int id;
     private String firstName;
     private String lastName;
     private String address;
     private List<String> statusOptions;
 
-    public Client(int photo, String firstName, String lastName, String address) {
+    public Client(int photo, int id,  String firstName, String lastName, String address) {
         this.photo = photo;
+        this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
         this.address = address;
@@ -36,5 +38,9 @@ public class Client {
 
     public List<String> getStatusOptions() {
         return statusOptions;
+    }
+
+    public int getId() {
+        return id;
     }
 }

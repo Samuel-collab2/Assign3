@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.net.HttpURLConnection;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -35,18 +36,28 @@ public class MainActivity extends AppCompatActivity {
         sortSpinner = findViewById(R.id.sortSpinner);
         searchView = findViewById(R.id.searchView);
 
-        // Check if the user is logged in
+        // Check if the user is logged in and if the token is valid
         SharedPreferences sharedPreferences = getSharedPreferences("LoginPrefs", MODE_PRIVATE);
         boolean isLoggedIn = sharedPreferences.getBoolean("isLoggedIn", false);
-        token = sharedPreferences.getString("token", null); // Retrieve the token
+        token = sharedPreferences.getString("token", null);
+        long loginTimestamp = sharedPreferences.getLong("loginTimestamp", 0);
 
-        if (!isLoggedIn || TextUtils.isEmpty(token)) {
-            // Redirect to LoginActivity if not logged in or token is missing
+        // Calculate if more than one day has passed (24 * 60 * 60 * 1000 milliseconds)
+        long oneDayInMillis = 24 * 60 * 60 * 1000;
+        long currentTime = System.currentTimeMillis();
+
+        if (!isLoggedIn || TextUtils.isEmpty(token) || (currentTime - loginTimestamp > oneDayInMillis)) {
+            // Redirect to LoginActivity if not logged in, token is missing, or token is older than one day
             Intent intent = new Intent(this, LoginActivity.class);
             startActivity(intent);
             finish();
             return;
         }
+
+        // Initialize and set up ClientAdapter with data and token
+        List<Client> clientList = clientManager.getClients(); // Assuming clientManager can provide client list
+        ClientAdapter clientAdapter = new ClientAdapter(clientList, this);
+        recyclerView.setAdapter(clientAdapter);
 
         // Set up search filtering
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
@@ -86,13 +97,4 @@ public class MainActivity extends AppCompatActivity {
             conn.addRequestProperty("Authorization", token);
         }
     }
-
-    // Example method to navigate to DetailActivity with a client ID
-    private void goToDetailActivity(int clientId) {
-        Intent passedIntent = new Intent(MainActivity.this, DetailActivity.class);
-        passedIntent.putExtra("clientId", clientId);
-        startActivity(passedIntent);
-
-    } //Testing code
-
 }
