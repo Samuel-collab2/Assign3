@@ -16,9 +16,11 @@ public class ClientManager {
     public ClientManager(Context context, RecyclerView recyclerView) {
         // Initialize the original client list
         clientListOriginal = new ArrayList<>();
-        clientListOriginal.add(new Client(R.drawable.person_icon_placeholder, 1, "Anadi", "Frontend", "Newton, BC"));
-        clientListOriginal.add(new Client(R.drawable.person_icon_placeholder,2,  "Simar", "Login", "Vancouver, BC"));
-        clientListOriginal.add(new Client(R.drawable.person_icon_placeholder,3,  "Dhruv", "Backend", "Unknown, Canada"));
+        clientListOriginal.add(new Client(R.drawable.person_icon_placeholder, 1, "John Doe", "completed", "123 Main St, Springfield"));
+        clientListOriginal.add(new Client(R.drawable.person_icon_placeholder, 2, "Jane Smith", "refused", "456 Oak Ave, Metropolis"));
+        clientListOriginal.add(new Client(R.drawable.person_icon_placeholder, 3, "Emily Johnson", "partial", "789 Pine Rd, Gotham"));
+        clientListOriginal.add(new Client(R.drawable.person_icon_placeholder, 4, "Michael Brown", "completed", "321 Elm St, Star City"));
+        clientListOriginal.add(new Client(R.drawable.person_icon_placeholder, 5, "Sarah Davis", "refused", "654 Maple St, Central City"));
         // Add more clients as needed...
 
         // Copy the original list to the display list
@@ -38,36 +40,38 @@ public class ClientManager {
             clientList.clear();
             clientList.addAll(clientListOriginal);
         } else {
-            // Otherwise, filter the list based on the search text
-            List<Client> filteredList = new ArrayList<>();
+            // Filter the list based on the search text
+            clientList.clear();
             for (Client client : clientListOriginal) {
                 if (client.getFirstName().toLowerCase().contains(text.toLowerCase()) ||
                         client.getLastName().toLowerCase().contains(text.toLowerCase()) ||
                         client.getAddress().toLowerCase().contains(text.toLowerCase())) {
-                    filteredList.add(client);
+                    clientList.add(client);
                 }
             }
-            clientList.clear();
-            clientList.addAll(filteredList);
+            System.out.println(clientList);
         }
         adapter.notifyDataSetChanged();
     }
 
     public void sortClients(int position) {
         Comparator<Client> comparator;
+
         switch (position) {
             case 0: // Sort by first name
-                comparator = Comparator.comparing(Client::getFirstName);
+                comparator = Comparator.comparing(Client::getFirstName, Comparator.nullsLast(String::compareTo));
                 break;
             case 1: // Sort by last name
-                comparator = Comparator.comparing(Client::getLastName);
+                comparator = Comparator.comparing(Client::getLastName, Comparator.nullsLast(String::compareTo));
                 break;
             case 2: // Sort by address
-                comparator = Comparator.comparing(Client::getAddress);
+                comparator = Comparator.comparing(Client::getAddress, Comparator.nullsLast(String::compareTo));
                 break;
             default:
                 return;
         }
+
+
         Collections.sort(clientList, comparator);
         adapter.notifyDataSetChanged();
     }

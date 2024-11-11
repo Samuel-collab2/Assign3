@@ -4,12 +4,7 @@ import static android.os.SystemClock.sleep;
 
 import org.junit.Rule;
 import org.junit.Test;
-
-import androidx.test.espresso.ViewAssertion;
-import androidx.test.espresso.assertion.ViewAssertions;
-import androidx.test.espresso.matcher.ViewMatchers;
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
-
 
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
@@ -18,23 +13,35 @@ import static androidx.test.espresso.action.ViewActions.swipeLeft;
 import static androidx.test.espresso.action.ViewActions.closeSoftKeyboard;
 import static androidx.test.espresso.action.ViewActions.replaceText;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
-//import static androidx.test.espresso.matcher.ViewMatchers.withId;
-//import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static androidx.test.espresso.matcher.ViewMatchers.*;
-import static org.hamcrest.Matchers.instanceOf;
-import static org.hamcrest.Matchers.is;
-import static org.hamcrest.core.StringContains.containsString;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 
 import static org.hamcrest.core.AllOf.allOf;
 
+
+
 public class DetailViewUITest {
+
     @Rule
-    public ActivityScenarioRule<DetailActivity> mActivityRule =
-            new ActivityScenarioRule<>(DetailActivity.class);
+    public ActivityScenarioRule<LoginActivity> mActivityRule =
+            new ActivityScenarioRule<>(LoginActivity.class);
+
 
     @Test  /* change status check # assumes the 'completed' checkbox is UNCHECKED before opening status*/
     public void statusChangeCheck() throws Exception {
+        onView(withId(R.id.usernameEditText)).perform(replaceText("john_doe"), closeSoftKeyboard());
+        onView(withId(R.id.passwordEditText)).perform(replaceText("test"), closeSoftKeyboard());
+        onView(withId(R.id.loginButton)).perform(click());
+
+        Thread.sleep(5000);
+
+//        Check if a main activity view is visible to confirm it is inside main activity
+        onView(withId(R.id.searchView)).check(matches(isDisplayed()));
+
+        onView(withText("Newton, BC")).perform(click());
+
+        // Wait for page to populate with client detailed info (takes long time)
+        sleep(23000);
 
         onView(withId(R.id.viewPager)).perform(swipeLeft());
 
@@ -48,10 +55,10 @@ public class DetailViewUITest {
 
         sleep(500);
 
-        onView(withText("completed")).perform(click());
+        onView(withText("refused")).perform(click());
         sleep(500);
 
-        onView(withText("completed")).
+        onView(withText("refused")).
                 check(matches(isChecked())); // Check if checkbox is checked
     }
 }
