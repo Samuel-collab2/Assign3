@@ -50,9 +50,7 @@ public class MainActivity extends AppCompatActivity {
         }
 
         // Initialize and set up ClientAdapter with data and token
-        List<Client> clientList = clientManager.getClients(); // Assuming clientManager can provide client list
-        ClientAdapter clientAdapter = new ClientAdapter(clientList, this);
-        recyclerView.setAdapter(clientAdapter);
+        // The adapter is already initialized in ClientManager, so no need to set it here again.
 
         // Set up search filtering
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
@@ -63,7 +61,7 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public boolean onQueryTextChange(String newText) {
-                clientManager.filterClients(newText);
+                clientManager.filterClients(newText); // This filters the list in ClientManager
                 return true;
             }
         });
@@ -77,7 +75,7 @@ public class MainActivity extends AppCompatActivity {
         sortSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                clientManager.sortClients(position);
+                clientManager.sortClients(position); // This sorts the list in ClientManager
             }
 
             @Override
