@@ -21,14 +21,16 @@ import java.util.concurrent.Executors;
 
 public class ClientManager {
 
+    private final String token;
     private List<Client> clientListOriginal;
     private List<Client> clientList;
     private ClientAdapter adapter;
     private Context context;
     private final ExecutorService executorService;
 
-    public ClientManager(Context context, RecyclerView recyclerView) {
+    public ClientManager(Context context, RecyclerView recyclerView, String token) {
         this.context = context;
+        this.token = token;
         clientListOriginal = new ArrayList<>();
         clientList = new ArrayList<>();
         adapter = new ClientAdapter(clientList, context);
@@ -50,8 +52,7 @@ public class ClientManager {
                     URL url = new URL("http://10.0.2.2:5000/clients");
                     HttpURLConnection conn = (HttpURLConnection) url.openConnection();
                     conn.setRequestMethod("GET");
-                    String authTok = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImpvaG5fZG9lIiwiZXhwIjoxNzMxMzU4NjIyfQ.amdQH5UPSY9PXmFBdp36JaiyAfDiU0PH19axePevtlc";
-                    conn.addRequestProperty("Authorization", authTok);
+                    conn.addRequestProperty("Authorization", token);
 
                     int responseCode = conn.getResponseCode();
                     if (responseCode == HttpURLConnection.HTTP_OK) {
@@ -123,7 +124,6 @@ public class ClientManager {
         adapter.notifyDataSetChanged();
     }
 
-
     public void sortClients(int position) {
         Comparator<Client> comparator;
         switch (position) {
@@ -139,7 +139,6 @@ public class ClientManager {
             default:
                 return;
         }
-        // Sort the client list (which is being shown to the user)
         Collections.sort(clientList, comparator);
         adapter.notifyDataSetChanged();
     }

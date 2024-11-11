@@ -31,7 +31,7 @@ public class MainActivity extends AppCompatActivity {
         RecyclerView recyclerView = findViewById(R.id.clientRecyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        clientManager = new ClientManager(this, recyclerView);
+
 
         sortSpinner = findViewById(R.id.sortSpinner);
         searchView = findViewById(R.id.searchView);
@@ -41,6 +41,7 @@ public class MainActivity extends AppCompatActivity {
         boolean isLoggedIn = sharedPreferences.getBoolean("isLoggedIn", false);
         token = sharedPreferences.getString("token", null); // Retrieve the token
 
+        clientManager = new ClientManager(this, recyclerView, token);
         if (!isLoggedIn || TextUtils.isEmpty(token)) {
             // Redirect to LoginActivity if not logged in or token is missing
             Intent intent = new Intent(this, LoginActivity.class);
