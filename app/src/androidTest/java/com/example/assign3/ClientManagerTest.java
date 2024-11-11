@@ -9,6 +9,8 @@ import org.junit.runner.RunWith;
 
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
+import static androidx.test.espresso.action.ViewActions.closeSoftKeyboard;
+import static androidx.test.espresso.action.ViewActions.replaceText;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
@@ -18,10 +20,19 @@ import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 public class ClientManagerTest {
 
     @Rule
-    public ActivityScenarioRule<MainActivity> activityRule = new ActivityScenarioRule<>(MainActivity.class);
+    public ActivityScenarioRule<LoginActivity> activityRule = new ActivityScenarioRule<>(LoginActivity.class);
 
     @Test
     public void testSortFunctionality() throws InterruptedException {
+        onView(withId(R.id.usernameEditText)).perform(replaceText("john_doe"), closeSoftKeyboard());
+        onView(withId(R.id.passwordEditText)).perform(replaceText("test"), closeSoftKeyboard());
+        onView(withId(R.id.loginButton)).perform(click());
+
+        Thread.sleep(5000);
+
+//        Check if a main activity view is visible to confirm it is inside main activity
+        onView(withId(R.id.searchView)).check(matches(isDisplayed()));
+
         // Ensure the sort spinner is present and open it
         onView(withId(R.id.sortSpinner)).check(matches(isDisplayed()));
         onView(withId(R.id.sortSpinner)).perform(click());
