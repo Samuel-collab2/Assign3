@@ -4,7 +4,10 @@ import static android.os.SystemClock.sleep;
 
 import org.junit.Rule;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
+import androidx.test.ext.junit.runners.AndroidJUnit4;
 
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
@@ -19,7 +22,7 @@ import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static org.hamcrest.core.AllOf.allOf;
 
 
-
+@RunWith(AndroidJUnit4.class)
 public class DetailViewUITest {
 
     @Rule
@@ -33,12 +36,12 @@ public class DetailViewUITest {
         onView(withId(R.id.passwordEditText)).perform(replaceText("test"), closeSoftKeyboard());
         onView(withId(R.id.loginButton)).perform(click());
 
-        Thread.sleep(5000);
+        Thread.sleep(2000);
 
 //        Check if a main activity view is visible to confirm it is inside main activity
         onView(withId(R.id.searchView)).check(matches(isDisplayed()));
 
-        onView(withText("Newton, BC")).perform(click());
+        onView(withText("123 Main St, Springfield")).perform(click());
 
         // Wait for page to populate with client detailed info (takes long time)
         sleep(23000);
@@ -55,10 +58,10 @@ public class DetailViewUITest {
 
         sleep(500);
 
-        onView(withText("refused")).perform(click());
+        onView(withText("partial")).perform(click());
         sleep(500);
 
-        onView(withText("refused")).
+        onView(withText("partial")).
                 check(matches(isChecked())); // Check if checkbox is checked
     }
 }
