@@ -49,9 +49,7 @@ public class MainActivity extends AppCompatActivity {
             return;
         }
 
-        // Initialize and set up ClientAdapter with data and token
-        List<Client> clientList = clientManager.getClients(); // Assuming clientManager can provide client list
-        ClientAdapter clientAdapter = new ClientAdapter(clientList, this);
+        ClientAdapter clientAdapter = new ClientAdapter(clientManager.getClients(), this);
         recyclerView.setAdapter(clientAdapter);
 
         // Set up search filtering

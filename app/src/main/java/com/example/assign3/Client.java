@@ -11,7 +11,7 @@ public class Client {
     private String address;
     private List<String> statusOptions;
 
-    public Client(int photo, int id,  String firstName, String lastName, String address) {
+    public Client(int photo,   String firstName, String lastName, String address,int id) {
         this.photo = photo;
         this.id = id;
         this.firstName = firstName;

@@ -1,36 +1,106 @@
 package com.example.assign3;
 
+import android.app.Activity;
 import android.content.Context;
+import android.os.Build;
+import android.util.Log;
 import androidx.recyclerview.widget.RecyclerView;
+import org.json.JSONArray;
+import org.json.JSONObject;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class ClientManager {
 
-    private List<Client> clientListOriginal; // Original list of clients
-    private List<Client> clientList; // Current display list of clients
+    private List<Client> clientListOriginal;
+    private List<Client> clientList;
     private ClientAdapter adapter;
+    private Context context;
+    private final ExecutorService executorService;
 
     public ClientManager(Context context, RecyclerView recyclerView) {
-        // Initialize the original client list
+        this.context = context;
         clientListOriginal = new ArrayList<>();
-        clientListOriginal.add(new Client(R.drawable.person_icon_placeholder, 1, "Anadi", "Frontend", "Newton, BC"));
-        clientListOriginal.add(new Client(R.drawable.person_icon_placeholder,2,  "Simar", "Login", "Vancouver, BC"));
-        clientListOriginal.add(new Client(R.drawable.person_icon_placeholder,3,  "Dhruv", "Backend", "Unknown, Canada"));
-        // Add more clients as needed...
-
-        // Copy the original list to the display list
-        clientList = new ArrayList<>(clientListOriginal);
-
+        clientList = new ArrayList<>();
         adapter = new ClientAdapter(clientList, context);
         recyclerView.setAdapter(adapter);
+
+        // Set up a thread pool for background tasks
+        executorService = Executors.newSingleThreadExecutor();
+
+        // Start asynchronous data fetching
+        fetchClients();
+    }
+
+    // Method to fetch clients asynchronously using CompletableFuture and ExecutorService
+    public void fetchClients() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+            CompletableFuture.supplyAsync(() -> {
+                List<Client> fetchedClients = new ArrayList<>();
+                try {
+                    URL url = new URL("http://10.0.2.2:5000/clients");
+                    HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+                    conn.setRequestMethod("GET");
+                    String authTok = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImpvaG5fZG9lIiwiZXhwIjoxNzMxMzU4NjIyfQ.amdQH5UPSY9PXmFBdp36JaiyAfDiU0PH19axePevtlc";
+                    conn.addRequestProperty("Authorization", authTok);
+
+                    int responseCode = conn.getResponseCode();
+                    if (responseCode == HttpURLConnection.HTTP_OK) {
+                        BufferedReader in = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+                        StringBuilder response = new StringBuilder();
+                        String inputLine;
+
+                        while ((inputLine = in.readLine()) != null) {
+                            response.append(inputLine);
+                        }
+                        in.close();
+
+                        // Parse the JSON response
+                        JSONArray jsonArray = new JSONArray(response.toString());
+                        for (int i = 0; i < jsonArray.length(); i++) {
+                            JSONObject jsonObject = jsonArray.getJSONObject(i);
+
+                            // Extract fields with checks
+                            int id = jsonObject.has("id") ? jsonObject.getInt("id") : -1;
+                            String firstName = jsonObject.optString("first_name", "N/A");
+                            String lastName = jsonObject.optString("last_name", "N/A");
+                            String address = jsonObject.optString("address", "N/A");
+
+                            // Create a Client object and add it to the list
+                            fetchedClients.add(new Client(R.drawable.person_icon_placeholder,  firstName, lastName, address,id));
+                        }
+                    }
+                } catch (Exception e) {
+                    Log.e("ClientManager", "Exception during fetching clients", e);
+                }
+                return fetchedClients; // Return the fetched clients list
+            }).thenAccept(fetchedClients -> {
+                // Run this on the main thread to update the UI
+                ((Activity) context).runOnUiThread(() -> {
+                    // Update client list and notify adapter
+                    clientList.clear();
+                    clientList.addAll(fetchedClients);
+                    clientListOriginal.addAll(fetchedClients);
+                    adapter.notifyDataSetChanged();
+
+                });
+            });
+        }
     }
 
     public ClientAdapter getAdapter() {
         return adapter;
     }
+
 
     public void filterClients(String text) {
         if (text == null || text.isEmpty()) {
@@ -53,6 +123,7 @@ public class ClientManager {
         adapter.notifyDataSetChanged();
     }
 
+
     public void sortClients(int position) {
         Comparator<Client> comparator;
         switch (position) {
@@ -68,9 +139,11 @@ public class ClientManager {
             default:
                 return;
         }
+        // Sort the client list (which is being shown to the user)
         Collections.sort(clientList, comparator);
         adapter.notifyDataSetChanged();
     }
+
 
     public List<Client> getClients() {
         return clientList;
