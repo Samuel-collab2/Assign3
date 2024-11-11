@@ -136,6 +136,7 @@ public class LoginActivity extends AppCompatActivity {
                     SharedPreferences.Editor editor = sharedPreferences.edit();
                     editor.putBoolean("isLoggedIn", true);
                     editor.putString("token", token);
+                    editor.putLong("loginTimestamp", System.currentTimeMillis()); // Save current timestamp
                     editor.apply();
 
                     runOnUiThread(() -> {

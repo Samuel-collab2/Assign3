@@ -36,13 +36,18 @@ public class MainActivity extends AppCompatActivity {
         sortSpinner = findViewById(R.id.sortSpinner);
         searchView = findViewById(R.id.searchView);
 
-        // Check if the user is logged in
+        // Check if the user is logged in and if the token is valid
         SharedPreferences sharedPreferences = getSharedPreferences("LoginPrefs", MODE_PRIVATE);
         boolean isLoggedIn = sharedPreferences.getBoolean("isLoggedIn", false);
-        token = sharedPreferences.getString("token", null); // Retrieve the token
+        token = sharedPreferences.getString("token", null);
+        long loginTimestamp = sharedPreferences.getLong("loginTimestamp", 0);
 
-        if (!isLoggedIn || TextUtils.isEmpty(token)) {
-            // Redirect to LoginActivity if not logged in or token is missing
+        // Calculate if more than one day has passed (24 * 60 * 60 * 1000 milliseconds)
+        long oneDayInMillis = 24 * 60 * 60 * 1000;
+        long currentTime = System.currentTimeMillis();
+
+        if (!isLoggedIn || TextUtils.isEmpty(token) || (currentTime - loginTimestamp > oneDayInMillis)) {
+            // Redirect to LoginActivity if not logged in, token is missing, or token is older than one day
             Intent intent = new Intent(this, LoginActivity.class);
             startActivity(intent);
             finish();

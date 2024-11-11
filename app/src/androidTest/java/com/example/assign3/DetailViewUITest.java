@@ -4,14 +4,7 @@ import static android.os.SystemClock.sleep;
 
 import org.junit.Rule;
 import org.junit.Test;
-
-import androidx.test.core.app.ActivityScenario;
-import androidx.test.espresso.ViewAssertion;
-import androidx.test.espresso.assertion.ViewAssertions;
-import androidx.test.espresso.matcher.ViewMatchers;
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
-import androidx.test.platform.app.InstrumentationRegistry;
-
 
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
@@ -20,58 +13,52 @@ import static androidx.test.espresso.action.ViewActions.swipeLeft;
 import static androidx.test.espresso.action.ViewActions.closeSoftKeyboard;
 import static androidx.test.espresso.action.ViewActions.replaceText;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
-//import static androidx.test.espresso.matcher.ViewMatchers.withId;
-//import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static androidx.test.espresso.matcher.ViewMatchers.*;
-import static org.hamcrest.Matchers.instanceOf;
-import static org.hamcrest.Matchers.is;
-import static org.hamcrest.core.StringContains.containsString;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 
 import static org.hamcrest.core.AllOf.allOf;
 
-import android.content.Intent;
+
 
 public class DetailViewUITest {
-//    @Rule
-//    public ActivityScenarioRule<DetailActivity> mActivityRule =
-//            new ActivityScenarioRule<>(DetailActivity.class);
+
+    @Rule
+    public ActivityScenarioRule<LoginActivity> mActivityRule =
+            new ActivityScenarioRule<>(LoginActivity.class);
+
 
     @Test  /* change status check # assumes the 'completed' checkbox is UNCHECKED before opening status*/
     public void statusChangeCheck() throws Exception {
+        onView(withId(R.id.usernameEditText)).perform(replaceText("john_doe"), closeSoftKeyboard());
+        onView(withId(R.id.passwordEditText)).perform(replaceText("test"), closeSoftKeyboard());
+        onView(withId(R.id.loginButton)).perform(click());
 
-        // Prepare the Intent with the required extras
-        Intent intent = new Intent(InstrumentationRegistry.getInstrumentation().getTargetContext(), DetailActivity.class);
-        intent.putExtra("clientId", 3);  // example int extra
-        intent.putExtra("authTok", "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImpvaG5fZG9lIiwiZXhwIjoxNzMxMzU4NjIyfQ.amdQH5UPSY9PXmFBdp36JaiyAfDiU0PH19axePevtlc");  // example string extra
+        Thread.sleep(5000);
 
-        // Launch the Activity with the Intent containing the extras
-        try (ActivityScenario<DetailActivity> scenario = ActivityScenario.launch(intent)) {
+//        Check if a main activity view is visible to confirm it is inside main activity
+        onView(withId(R.id.searchView)).check(matches(isDisplayed()));
 
-            // Perform the Espresso tests after the Activity has been launched
-            // onView(withId(R.id.textViewDetail)).check(matches(isDisplayed()));  // Example test: check if a view is displayed
-            // Add more checks here based on your extras
+        onView(withText("Newton, BC")).perform(click());
 
-            // Wait for page to populate with clients info
-            sleep(25000);
+        // Wait for page to populate with client detailed info (takes long time)
+        sleep(23000);
 
-            onView(withId(R.id.viewPager)).perform(swipeLeft());
+        onView(withId(R.id.viewPager)).perform(swipeLeft());
 
-            sleep(500);
+        sleep(500);
 
-            onView(withId(R.id.viewPager)).perform(swipeRight());
+        onView(withId(R.id.viewPager)).perform(swipeRight());
 
-            sleep(500);
+        sleep(500);
 
-            onView(allOf(withId(R.id.spinner), isDisplayed())).perform(click());
+        onView(allOf(withId(R.id.spinner), isDisplayed())).perform(click());
 
-            sleep(500);
+        sleep(500);
 
-            onView(withText("completed")).perform(click());
-            sleep(500);
+        onView(withText("refused")).perform(click());
+        sleep(500);
 
-            onView(withText("completed")).
-                    check(matches(isChecked())); // Check if checkbox is checked
-        }
+        onView(withText("refused")).
+                check(matches(isChecked())); // Check if checkbox is checked
     }
 }
